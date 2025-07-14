@@ -922,6 +922,23 @@
                 <textarea id="orderComments" rows="2" placeholder="Ej: Sin cebolla, extra sal, bien cocido, etc."></textarea>
             </div>
         </div>
+        <div class="form-group">
+            <div class="factura-toggle" onclick="toggleFactura()" style="cursor: pointer; color: #999; font-size: 0.8rem; text-align: right;">
+                <span>¿Necesitas factura?</span> <span id="facturaArrow">▼</span>
+            </div>
+            <div id="facturaSection" style="display: none; margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e0e0e0;">
+                <label for="facturaOption" style="font-size: 0.85rem; color: #666;">Facturación:</label>
+                <select id="facturaOption" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; margin-bottom: 8px;">
+                    <option value="no">No requiero factura</option>
+                    <option value="cf">Consumidor Final (C/F)</option>
+                    <option value="nit">Factura con NIT</option>
+                </select>
+                <div id="nitField" style="display: none;">
+                    <label for="customerNit" style="font-size: 0.85rem; color: #666;">NIT:</label>
+                    <input type="text" id="customerNit" placeholder="Ingresa tu NIT (máx. 9 dígitos)" maxlength="9" pattern="[0-9]{1,9}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem;">
+                </div>
+            </div>
+        </div>
 
         <!-- Menú -->
         <div class="section slide-up">
@@ -1247,6 +1264,28 @@
             itemQuantities[id] = 0;
         });
 
+        function toggleFactura() {
+            const section = document.getElementById('facturaSection');
+            const arrow = document.getElementById('facturaArrow');
+
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                arrow.textContent = '▲';
+            } else {
+                section.style.display = 'none';
+                arrow.textContent = '▼';
+            }
+        }
+
+        // Mostrar campo NIT cuando seleccionen factura con NIT
+        document.getElementById('facturaOption').addEventListener('change', function () {
+            const nitField = document.getElementById('nitField');
+            if (this.value === 'nit') {
+                nitField.style.display = 'block';
+            } else {
+                nitField.style.display = 'none';
+            }
+        });
         // Función para eliminar todos los items de un producto
         function clearItem(productId) {
             itemQuantities[productId] = 0;
@@ -1663,6 +1702,8 @@
             const customerAddress = document.getElementById('customerAddress').value.trim();
             const paymentMethod = document.getElementById('paymentMethod').value;
             const comments = document.getElementById('orderComments').value.trim();
+            const facturaOption = document.getElementById('facturaOption').value;
+            const customerNit = document.getElementById('customerNit').value.trim();
 
             if (!customerName || !customerPhone || !paymentMethod) {
                 showToast('❌ Por favor completa todos los campos obligatorios', 'error');
@@ -1713,6 +1754,28 @@
             message += `Telefono: ${customerPhone}\n`;
             message += `Direccion: ${customerAddress || 'No indicada'}\n`;
             message += `Metodo Pago: ${paymentNames[paymentMethod]}\n`;
+
+            // Agregar info de facturación si es necesaria
+            if (facturaOption !== 'no') {
+                if (facturaOption === 'cf') {
+                    message += `Factura: CONSUMIDOR FINAL\n`;
+                } else if (facturaOption === 'nit' && customerNit) {
+                    message += `Factura: NIT ${customerNit}\n`;
+                }
+            }
+            // Validar NIT si se requiere factura con NIT
+            if (facturaOption === 'nit') {
+                if (!customerNit) {
+                    showToast('❌ Por favor ingresa tu NIT para la factura', 'error');
+                    document.getElementById('customerNit').focus();
+                    return;
+                }
+                if (customerNit.length < 1 || customerNit.length > 9) {
+                    showToast('❌ El NIT debe tener entre 1 y 9 dígitos', 'error');
+                    document.getElementById('customerNit').focus();
+                    return;
+                }
+            }
             message += `--------------------------------\n\n`;
 
             message += `DETALLE DEL PEDIDO:\n`;
@@ -1801,6 +1864,10 @@
                 document.getElementById('customerAddress').value = '';
                 document.getElementById('paymentMethod').value = '';
                 document.getElementById('orderComments').value = '';
+                document.getElementById('facturaOption').value = 'no';
+                document.getElementById('customerNit').value = '';
+                document.getElementById('facturaSection').style.display = 'none';
+                document.getElementById('facturaArrow').textContent = '▼';
                 updateUI();
                 closeReviewModal();
                 showSuccessMessage();
@@ -1929,6 +1996,24 @@
             e.preventDefault();
             let paste = (e.clipboardData || window.clipboardData).getData('text');
             paste = paste.replace(/[^0-9]/g, '').slice(0, 8);
+            e.target.value = paste;
+        });
+        // Validar entrada de NIT - solo números y máximo 9 dígitos
+        document.getElementById('customerNit').addEventListener('input', function (e) {
+            // Eliminar cualquier caracter que no sea número
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+            // Limitar a 9 dígitos
+            if (e.target.value.length > 9) {
+                e.target.value = e.target.value.slice(0, 9);
+            }
+        });
+
+        // Validación adicional al pegar texto en NIT
+        document.getElementById('customerNit').addEventListener('paste', function (e) {
+            e.preventDefault();
+            let paste = (e.clipboardData || window.clipboardData).getData('text');
+            paste = paste.replace(/[^0-9]/g, '').slice(0, 9);
             e.target.value = paste;
         });
 
