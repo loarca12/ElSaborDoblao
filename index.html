@@ -46,22 +46,22 @@
         .header {
             background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
             color: white;
-            padding: 8px 15px; /* CAMBIO: antes era 25px */
+            padding: 20px;
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
             box-shadow: var(--shadow-lg);
-            border-bottom: 2px solid var(--primary-yellow);
+            border-bottom: 3px solid var(--primary-yellow);
         }
 
         .logo-container {
-            margin-bottom: 5px; /* CAMBIO: antes era 15px */
+            margin-bottom: 15px;
             position: relative;
         }
 
         .logo {
-            max-height: 50px; /* CAMBIO: antes era 90px */
+            max-height: 70px;
             width: auto;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
             transition: transform 0.3s ease;
@@ -72,8 +72,8 @@
             }
 
         .header h1 {
-            font-size: 1.1rem; /* CAMBIO: antes era 1.8rem */
-            margin-bottom: 3px; /* CAMBIO: antes era 8px */
+            font-size: 1.5rem;
+            margin-bottom: 5px;
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             background: linear-gradient(45deg, var(--primary-yellow), var(--primary-cream));
@@ -83,9 +83,57 @@
         }
 
         .header p {
-            font-size: 0.75rem; /* CAMBIO: antes era 1rem */
+            font-size: 0.9rem;
             opacity: 0.95;
             font-weight: 400;
+        }
+
+        /* MÓVILES PEQUEÑOS - Header compacto */
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 15px;
+                border-bottom: 2px solid var(--primary-yellow);
+            }
+
+            .logo-container {
+                margin-bottom: 8px;
+            }
+
+            .logo {
+                max-height: 45px;
+            }
+
+            .header h1 {
+                font-size: 1.1rem;
+                margin-bottom: 3px;
+            }
+
+            .header p {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* TABLETS - Tamaño medio */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .logo-container {
+                margin-bottom: 12px;
+            }
+
+            .logo {
+                max-height: 60px;
+            }
+
+            .header h1 {
+                font-size: 1.3rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
         }
 
         .container {
