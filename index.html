@@ -1,0 +1,1912 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>El Sabor Dobla'O - Hacer Pedido</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-red: #E43232;
+            --primary-yellow: #FEB800;
+            --primary-cream: #F9CE78;
+            --dark-red: #c41e1e;
+            --dark-yellow: #e6a500;
+            --white: #ffffff;
+            --black: #000000;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --success: #28a745;
+            --danger: #dc3545;
+            --whatsapp: #25D366;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--gray-100) 0%, #ffffff 100%);
+            min-height: 100vh;
+            padding-bottom: 120px;
+            line-height: 1.6;
+        }
+
+        /* Header mejorado */
+        .header {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+
+        .logo-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .logo {
+            max-height: 90px;
+            width: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, var(--primary-yellow), var(--primary-cream));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Secciones mejoradas */
+        .section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary-red), var(--primary-yellow));
+            }
+
+        .section-title {
+            color: var(--gray-800);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(228, 50, 50, 0.3);
+        }
+
+        /* Formularios mejorados */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: var(--white);
+        }
+
+            input:focus, textarea:focus, select:focus {
+                outline: none;
+                border-color: var(--primary-red);
+                box-shadow: 0 0 0 4px rgba(228, 50, 50, 0.1);
+                transform: translateY(-1px);
+            }
+
+        /* Categorías del menú mejoradas */
+        .menu-category {
+            margin-bottom: 25px;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            padding: 16px 20px;
+            border-radius: 15px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .category-header::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: -50px;
+                width: 100px;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+                transform: skewX(-15deg);
+            }
+
+        /* Items del menú mejorados */
+        .menu-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            border: 2px solid var(--gray-200);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .menu-item::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(228, 50, 50, 0.05), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .menu-item:hover::before {
+                left: 100%;
+            }
+
+            .menu-item:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-lg);
+                border-color: var(--primary-red);
+            }
+
+            .menu-item.selected {
+                border-color: var(--primary-red);
+                background: linear-gradient(135deg, #fff5f5, var(--white));
+                box-shadow: 0 4px 20px rgba(228, 50, 50, 0.15);
+            }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .menu-item h4 {
+            color: var(--gray-800);
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .menu-item p {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .price {
+            color: var(--primary-red);
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Controles de cantidad mejorados */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .qty-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(228, 50, 50, 0.3);
+        }
+
+            .qty-btn:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(228, 50, 50, 0.4);
+            }
+
+            .qty-btn:active {
+                transform: scale(0.95);
+            }
+
+            .qty-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .qty-display {
+            background: linear-gradient(135deg, var(--white), var(--gray-100));
+            border: 2px solid var(--primary-red);
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 700;
+            min-width: 50px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--primary-red);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .clear-item-btn {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-left: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+        }
+
+            .clear-item-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+            }
+
+        /* Botones de combo mejorados */
+        .combo-btn {
+            background: linear-gradient(135deg, var(--success), #218838);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .combo-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: left 0.4s ease;
+            }
+
+            .combo-btn:hover::before {
+                left: 100%;
+            }
+
+            .combo-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            }
+
+        /* Combos agregados mejorados */
+        .combo-added-list {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--gray-200);
+        }
+
+        .combo-added-item {
+            background: linear-gradient(135deg, var(--success), #218838);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+            animation: slideInUp 0.3s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .remove-combo-btn {
+            background: var(--white);
+            color: var(--danger);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+            .remove-combo-btn:hover {
+                background: var(--danger);
+                color: var(--white);
+            }
+
+        /* Carrito fijo mejorado */
+        .cart-summary {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--white), var(--gray-100));
+            padding: 20px;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.15);
+            z-index: 99;
+            border-top: 3px solid var(--primary-yellow);
+            backdrop-filter: blur(10px);
+        }
+
+        .cart-content {
+            max-width: 520px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-info {
+            flex: 1;
+        }
+
+        .cart-items {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gray-800);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, var(--whatsapp), #128c7e);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .whatsapp-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: left 0.4s ease;
+            }
+
+            .whatsapp-btn:hover::before {
+                left: 100%;
+            }
+
+            .whatsapp-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            }
+
+            .whatsapp-btn:active {
+                transform: translateY(0);
+            }
+
+            .whatsapp-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        /* Modales mejorados */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 450px;
+            margin: 50px auto;
+            animation: modalSlideIn 0.4s ease;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--gray-200);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(100px) scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal h3 {
+            color: var(--gray-800);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .modal-group {
+            margin-bottom: 20px;
+        }
+
+            .modal-group label {
+                display: block;
+                color: var(--gray-600);
+                margin-bottom: 8px;
+                font-size: 0.95rem;
+                font-weight: 500;
+            }
+
+        .extras-group {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--gray-200);
+        }
+
+        .extra-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+            .extra-option:hover {
+                background-color: var(--gray-100);
+            }
+
+            .extra-option input {
+                width: 20px;
+                height: 20px;
+                margin-right: 12px;
+                cursor: pointer;
+                accent-color: var(--primary-red);
+            }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: linear-gradient(135deg, var(--gray-600), #5a6268);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-save {
+            flex: 1;
+            background: linear-gradient(135deg, var(--success), #218838);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+            .btn-cancel:hover, .btn-save:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            }
+
+        /* Revisión de orden mejorada */
+        .order-review {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+            .order-review::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .order-review::-webkit-scrollbar-track {
+                background: var(--gray-200);
+                border-radius: 10px;
+            }
+
+            .order-review::-webkit-scrollbar-thumb {
+                background: var(--primary-red);
+                border-radius: 10px;
+            }
+
+        .order-item-review {
+            background: linear-gradient(135deg, var(--gray-100), var(--white));
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--primary-red);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+            .order-item-review strong {
+                color: var(--gray-800);
+                font-weight: 600;
+            }
+
+        .order-item-details {
+            color: var(--gray-600);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .clear-cart-btn {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+            .clear-cart-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+            }
+
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--gray-600);
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        /* Indicador de carga mejorado */
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--gray-300);
+            border-top: 3px solid var(--primary-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Efectos adicionales */
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Responsive mejorado */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .cart-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .whatsapp-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 16px 28px;
+            }
+
+            .modal-content {
+                margin: 20px auto;
+                padding: 25px;
+            }
+        }
+
+        /* Animaciones adicionales */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .slide-up {
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Pulso para elementos importantes */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(228, 50, 50, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(228, 50, 50, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(228, 50, 50, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <!-- Aquí irá tu logo - solo cambiar el src -->
+            <img src="propertie.png" alt="El Sabor Dobla'O Logo" class="logo floating-icon">
+        </div>
+        <h1><img src="icon.png" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;"> Haz tu pedido fácil y rápido</h1>
+        <p>✨ Auténtico sabor guatemalteco directo a tu mesa</p>
+    </div>
+
+    <div class="container">
+        <!-- Datos del Cliente -->
+        <div class="section fade-in">
+            <h2 class="section-title">
+                <div class="section-icon">👤</div>
+                Ingresa tus Datos
+            </h2>
+            <div class="form-group">
+                <label for="customerName">Nombre completo *</label>
+                <input type="text" id="customerName" required placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Teléfono * (8 dígitos)</label>
+                <input type="tel" id="customerPhone" required maxlength="8" pattern="[0-9]{8}">
+            </div>
+            <div class="form-group">
+                <label for="customerAddress">Dirección de Entrega *</label>
+                <textarea id="customerAddress" rows="2" required placeholder="Ingresa tu dirección completa para la entrega..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="paymentMethod">Método de Pago *</label>
+                <select id="paymentMethod" required>
+                    <option value="">Selecciona tu método de pago</option>
+                    <option value="efectivo">💵 Efectivo</option>
+                    <option value="tarjeta">💳 Tarjeta (Visa/Mastercard)</option>
+                    <option value="transferencia">🏦 Transferencia Bancaria</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="orderComments">Comentarios Especiales</label>
+                <textarea id="orderComments" rows="2" placeholder="Ej: Sin cebolla, extra sal, bien cocido, etc."></textarea>
+            </div>
+        </div>
+
+        <!-- Menú -->
+        <div class="section slide-up">
+            <h2 class="section-title">
+                <div class="section-icon">🍴</div>
+                Nuestro Delicioso Menú
+            </h2>
+
+            <!-- Dobladas -->
+            <div class="menu-category">
+                <div class="category-header">
+                    🥙 Dobladas Individuales
+                    <span style="float: right; font-size: 0.9rem; opacity: 0.9;">Q18 c/u</span>
+                </div>
+                <div class="menu-item" id="item-doblada-res">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Res</h4>
+                            <p>Deliciosa carne de res sazonada con especias tradicionales</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-res" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-res', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-res">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-res', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-res')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-doblada-pollo">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Pollo</h4>
+                            <p>Pollo jugoso y bien sazonado con hierbas guatemaltecas</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-pollo" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-pollo', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-pollo">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-pollo', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-pollo')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-doblada-cerdo">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Cerdo</h4>
+                            <p>Cerdo tierno y sabroso con sazón especial</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-cerdo" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-cerdo', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-cerdo">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-cerdo', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-cerdo')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-doblada-chile">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Chile Relleno</h4>
+                            <p>Chile relleno tradicional guatemalteco</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-chile" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-chile', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-chile">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-chile', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-chile')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-doblada-queso">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Queso</h4>
+                            <p>Queso derretido cremoso y delicioso</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-queso" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-queso', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-queso">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-queso', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-queso')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-doblada-queso-jalapeno">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Queso Jalapeño</h4>
+                            <p>Queso cremoso con un toque picante de jalapeño</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-queso-jalapeno" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-queso-jalapeno', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-queso-jalapeno">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-queso-jalapeno', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-queso-jalapeno')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-doblada-queso-loroco">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Doblada de Queso Loroco</h4>
+                            <p>Queso con loroco fresco, sabor auténtico guatemalteco</p>
+                        </div>
+                        <span class="price">Q18</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-doblada-queso-loroco" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('doblada-queso-loroco', -1)">−</button>
+                        <div class="qty-display" id="qty-doblada-queso-loroco">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('doblada-queso-loroco', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('doblada-queso-loroco')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combos -->
+            <div class="menu-category">
+                <div class="category-header">
+                    🍽️ Combos Especiales - ¡Ahorra más!
+                </div>
+                <div class="menu-item" style="cursor: default; border: 2px solid var(--success);">
+                    <div>
+                        <h4>🔥 El Doblao - <span class="price">Q39</span></h4>
+                        <p>2 dobladas a tu elección + bebida + salsas incluidas</p>
+                        <button class="combo-btn" onclick="openComboModal('doblao', 'El Doblao', 39, 2); event.stopPropagation();">
+                            ✨ Armar Mi Combo
+                        </button>
+                        <div id="doblao-combos-list" class="combo-added-list"></div>
+                    </div>
+                </div>
+                <div class="menu-item" style="cursor: default; border: 2px solid var(--success);">
+                    <div>
+                        <h4>🌟 El Triple Sabor - <span class="price">Q56</span></h4>
+                        <p>3 dobladas a tu elección + bebida + salsas incluidas</p>
+                        <button class="combo-btn" onclick="openComboModal('triple', 'El Triple Sabor', 56, 3); event.stopPropagation();">
+                            ✨ Armar Mi Combo
+                        </button>
+                        <div id="triple-combos-list" class="combo-added-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bebidas -->
+            <div class="menu-category">
+                <div class="category-header">
+                    🥤 Bebidas Refrescantes
+                </div>
+                <div class="menu-item" id="item-jamaica">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Jamaica Natural</h4>
+                            <p>Refrescante bebida natural preparada del día</p>
+                        </div>
+                        <span class="price">Q8</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-jamaica" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('jamaica', -1)">−</button>
+                        <div class="qty-display" id="qty-jamaica">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('jamaica', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('jamaica')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-horchata">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Horchata Casera</h4>
+                            <p>Tradicional horchata guatemalteca preparada artesanalmente</p>
+                        </div>
+                        <span class="price">Q8</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-horchata" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('horchata', -1)">−</button>
+                        <div class="qty-display" id="qty-horchata">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('horchata', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('horchata')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-limonada">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Limonada Fresca</h4>
+                            <p>Natural y refrescante, perfecta para acompañar</p>
+                        </div>
+                        <span class="price">Q8</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-limonada" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('limonada', -1)">−</button>
+                        <div class="qty-display" id="qty-limonada">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('limonada', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('limonada')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-cocacola">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Coca Cola</h4>
+                            <p>Bien fría y refrescante</p>
+                        </div>
+                        <span class="price">Q6</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-cocacola" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('cocacola', -1)">−</button>
+                        <div class="qty-display" id="qty-cocacola">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('cocacola', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('cocacola')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-sprite">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Sprite</h4>
+                            <p>Refrescante sabor lima-limón</p>
+                        </div>
+                        <span class="price">Q6</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-sprite" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('sprite', -1)">−</button>
+                        <div class="qty-display" id="qty-sprite">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('sprite', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('sprite')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+                <div class="menu-item" id="item-fanta">
+                    <div class="menu-item-header">
+                        <div>
+                            <h4>Fanta Naranja</h4>
+                            <p>Delicioso sabor naranja burbujeante</p>
+                        </div>
+                        <span class="price">Q6</span>
+                    </div>
+                    <div class="quantity-controls" id="controls-fanta" style="display: none;">
+                        <button class="qty-btn" onclick="changeQuantity('fanta', -1)">−</button>
+                        <div class="qty-display" id="qty-fanta">0</div>
+                        <button class="qty-btn" onclick="changeQuantity('fanta', 1)">+</button>
+                        <button class="clear-item-btn" onclick="clearItem('fanta')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carrito Fijo Mejorado -->
+    <div class="cart-summary">
+        <div class="cart-content">
+            <div class="cart-info">
+                <div class="cart-items" id="cartItemsCount">🛒 Tu carrito está vacío</div>
+                <div class="cart-total">Total: <span id="cartTotal">Q0</span></div>
+            </div>
+            <button class="whatsapp-btn pulse" onclick="reviewOrder()" disabled id="whatsappBtn">
+                <span>📱</span>
+                <span>Revisar Pedido</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para Combos Mejorado -->
+    <div id="comboModal" class="modal">
+        <div class="modal-content">
+            <h3>🍽️ Personaliza tu Combo</h3>
+            <div id="comboConfig"></div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">❌ Cancelar</button>
+                <button class="btn-save" onclick="saveCombo()">✅ Agregar al Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Revisión Mejorado -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <h3>📋 Revisar tu Pedido</h3>
+            <div class="order-review" id="orderReview"></div>
+            <div style="border-top: 2px solid var(--primary-red); margin-top: 20px; padding-top: 15px;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; color: var(--gray-800);">
+                    <span>💰 TOTAL A PAGAR:</span>
+                    <span id="reviewTotal" style="color: var(--primary-red);">Q0</span>
+                </div>
+            </div>
+            <button class="clear-cart-btn" onclick="clearOrder()">🗑️ Vaciar Carrito Completo</button>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeReviewModal()">✏️ Seguir Editando</button>
+                <button class="btn-save" onclick="sendToWhatsApp()" style="background: linear-gradient(135deg, var(--whatsapp), #128c7e);">
+                    📱 Enviar por WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tu número de WhatsApp (código de país + número)
+        const WHATSAPP_NUMBER = '50234827948';
+
+        // Información de los productos
+        const products = {
+            'doblada-res': { name: 'Doblada de Res', price: 18 },
+            'doblada-pollo': { name: 'Doblada de Pollo', price: 18 },
+            'doblada-cerdo': { name: 'Doblada de Cerdo', price: 18 },
+            'doblada-chile': { name: 'Doblada de Chile Relleno', price: 18 },
+            'doblada-queso': { name: 'Doblada de Queso', price: 18 },
+            'doblada-queso-jalapeno': { name: 'Doblada de Queso Jalapeño', price: 18 },
+            'doblada-queso-loroco': { name: 'Doblada de Queso Loroco', price: 18 },
+            'jamaica': { name: 'Jamaica Natural', price: 8 },
+            'horchata': { name: 'Horchata Casera', price: 8 },
+            'limonada': { name: 'Limonada Fresca', price: 8 },
+            'cocacola': { name: 'Coca Cola', price: 6 },
+            'sprite': { name: 'Sprite', price: 6 },
+            'fanta': { name: 'Fanta Naranja', price: 6 }
+        };
+
+        let order = [];
+        let orderCounter = parseInt(localStorage.getItem('orderCounter') || '1');
+        let currentCombo = null;
+        let itemQuantities = {};
+
+        // Inicializar cantidades
+        Object.keys(products).forEach(id => {
+            itemQuantities[id] = 0;
+        });
+
+        // Función para eliminar todos los items de un producto
+        function clearItem(productId) {
+            itemQuantities[productId] = 0;
+            updateOrderFromQuantities();
+            updateUI();
+        }
+
+        // Función para cambiar cantidad de productos individuales
+        function changeQuantity(productId, change) {
+            const currentQty = itemQuantities[productId] || 0;
+            const newQty = Math.max(0, currentQty + change);
+
+            itemQuantities[productId] = newQty;
+
+            // Actualizar la orden
+            updateOrderFromQuantities();
+            updateUI();
+        }
+
+        // Función para actualizar la orden basada en las cantidades
+        function updateOrderFromQuantities() {
+            // Remover items individuales existentes (mantener combos)
+            order = order.filter(item => item.type === 'combo');
+
+            // Agregar items con cantidad > 0
+            Object.keys(itemQuantities).forEach(productId => {
+                const qty = itemQuantities[productId];
+                if (qty > 0) {
+                    const product = products[productId];
+                    for (let i = 0; i < qty; i++) {
+                        order.push({
+                            id: productId + '_' + Date.now() + '_' + i,
+                            type: 'item',
+                            productId: productId,
+                            name: product.name,
+                            price: product.price,
+                            quantity: 1
+                        });
+                    }
+                }
+            });
+        }
+
+        // Función para actualizar la interfaz
+        function updateUI() {
+            // Actualizar displays de cantidad y controles
+            Object.keys(products).forEach(productId => {
+                const qty = itemQuantities[productId];
+                const qtyDisplay = document.getElementById(`qty-${productId}`);
+                const controls = document.getElementById(`controls-${productId}`);
+                const menuItem = document.getElementById(`item-${productId}`);
+
+                if (qtyDisplay && controls && menuItem) {
+                    qtyDisplay.textContent = qty;
+
+                    if (qty > 0) {
+                        controls.style.display = 'flex';
+                        menuItem.classList.add('selected');
+                    } else {
+                        controls.style.display = 'none';
+                        menuItem.classList.remove('selected');
+                    }
+                }
+            });
+
+            // Actualizar carrito
+            updateCart();
+        }
+
+        // Función para manejar click en item del menú
+        function handleMenuItemClick(productId) {
+            const currentQty = itemQuantities[productId] || 0;
+            if (currentQty === 0) {
+                changeQuantity(productId, 1);
+            }
+        }
+
+        function updateCart() {
+            const itemsCount = document.getElementById('cartItemsCount');
+            const totalSpan = document.getElementById('cartTotal');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+
+            const totalItems = order.length;
+            const total = order.reduce((sum, item) => sum + item.price, 0);
+
+            if (totalItems === 0) {
+                itemsCount.textContent = '🛒 Tu carrito está vacío';
+                whatsappBtn.disabled = true;
+                whatsappBtn.classList.add('pulse');
+            } else if (totalItems === 1) {
+                itemsCount.textContent = '🎉 1 delicioso item agregado';
+                whatsappBtn.disabled = false;
+                whatsappBtn.classList.remove('pulse');
+            } else {
+                itemsCount.textContent = `🎉 ${totalItems} deliciosos items agregados`;
+                whatsappBtn.disabled = false;
+                whatsappBtn.classList.remove('pulse');
+            }
+
+            totalSpan.textContent = `Q${total}`;
+
+            // Actualizar listas de combos
+            updateComboLists();
+        }
+
+        // Función para actualizar las listas de combos visibles
+        function updateComboLists() {
+            const doblaoCombos = order.filter(item => item.type === 'combo' && item.name === 'El Doblao');
+            const tripleCombos = order.filter(item => item.type === 'combo' && item.name === 'El Triple Sabor');
+
+            // Actualizar lista de El Doblao
+            const doblaoList = document.getElementById('doblao-combos-list');
+            doblaoList.innerHTML = '';
+            doblaoCombos.forEach((combo, index) => {
+                const comboDiv = document.createElement('div');
+                comboDiv.className = 'combo-added-item';
+                comboDiv.innerHTML = `
+                        <span>✅ Combo #${index + 1} - Q${combo.price}</span>
+                        <button class="remove-combo-btn" onclick="removeCombo(${combo.id})">✖️ Quitar</button>
+                    `;
+                doblaoList.appendChild(comboDiv);
+            });
+
+            // Actualizar lista de El Triple Sabor
+            const tripleList = document.getElementById('triple-combos-list');
+            tripleList.innerHTML = '';
+            tripleCombos.forEach((combo, index) => {
+                const comboDiv = document.createElement('div');
+                comboDiv.className = 'combo-added-item';
+                comboDiv.innerHTML = `
+                        <span>✅ Combo #${index + 1} - Q${combo.price}</span>
+                        <button class="remove-combo-btn" onclick="removeCombo(${combo.id})">✖️ Quitar</button>
+                    `;
+                tripleList.appendChild(comboDiv);
+            });
+        }
+
+        // Función para remover un combo
+        function removeCombo(comboId) {
+            order = order.filter(item => item.id !== comboId);
+            updateCart();
+        }
+
+        function openComboModal(type, name, price, numDobladas) {
+            currentCombo = {
+                type: type,
+                name: name,
+                price: price,
+                numDobladas: numDobladas
+            };
+
+            let html = `<p style="margin-bottom: 20px; text-align: center; color: var(--gray-600);">🎯 Personaliza tu <strong style="color: var(--primary-red);">${name}</strong></p>`;
+
+            // Dobladas
+            for (let i = 0; i < numDobladas; i++) {
+                html += `
+                        <div class="modal-group">
+                            <label>🥙 Doblada ${i + 1}:</label>
+                            <select id="doblada${i}">
+                                <option value="res">🥩 Doblada de Res</option>
+                                <option value="pollo">🐔 Doblada de Pollo</option>
+                                <option value="cerdo">🐷 Doblada de Cerdo</option>
+                                <option value="chile">🌶️ Doblada de Chile Relleno</option>
+                                <option value="queso">🧀 Doblada de Queso</option>
+                                <option value="queso-jalapeno">🌶️🧀 Doblada de Queso Jalapeño</option>
+                                <option value="queso-loroco">🌿🧀 Doblada de Queso Loroco</option>
+                            </select>
+                        </div>
+                    `;
+            }
+
+            // Bebida
+            html += `
+                    <div class="modal-group">
+                        <label>🥤 Bebida incluida:</label>
+                        <select id="bebida">
+                            <option value="jamaica">🟣 Jamaica Natural</option>
+                            <option value="horchata">🤍 Horchata Casera</option>
+                            <option value="limonada">🟡 Limonada Fresca</option>
+                            <option value="cocacola">🔴 Coca Cola</option>
+                            <option value="sprite">🟢 Sprite</option>
+                            <option value="fanta">🟠 Fanta Naranja</option>
+                        </select>
+                    </div>
+
+                    <div class="extras-group">
+                        <label style="margin-bottom: 15px; font-weight: 600; color: var(--gray-800);">✨ Extras opcionales:</label>
+                        <div class="extra-option">
+                            <input type="checkbox" id="extraQueso" value="6">
+                            <label for="extraQueso" style="margin: 0; cursor: pointer;">🧀 Extra Queso - <strong>Q6</strong></label>
+                        </div>
+                        <div class="extra-option">
+                            <input type="checkbox" id="extraCarne" value="6">
+                            <label for="extraCarne" style="margin: 0; cursor: pointer;">🥩 Extra Carne - <strong>Q6</strong></label>
+                        </div>
+                    </div>
+                `;
+
+            document.getElementById('comboConfig').innerHTML = html;
+            document.getElementById('comboModal').style.display = 'block';
+        }
+
+        function saveCombo() {
+            if (!currentCombo) return;
+
+            const dobladas = [];
+            for (let i = 0; i < currentCombo.numDobladas; i++) {
+                const select = document.getElementById(`doblada${i}`);
+                if (select) dobladas.push(select.value);
+            }
+
+            const bebidaSelect = document.getElementById('bebida');
+            const bebida = bebidaSelect ? bebidaSelect.value : 'jamaica';
+
+            const extras = [];
+            let extraPrice = 0;
+
+            const extraQueso = document.getElementById('extraQueso');
+            if (extraQueso?.checked) {
+                extras.push('Extra Queso');
+                extraPrice += 6;
+            }
+
+            const extraCarne = document.getElementById('extraCarne');
+            if (extraCarne?.checked) {
+                extras.push('Extra Carne');
+                extraPrice += 6;
+            }
+
+            const combo = {
+                id: Date.now(),
+                type: 'combo',
+                name: currentCombo.name,
+                price: currentCombo.price + extraPrice,
+                originalPrice: currentCombo.price,
+                extraPrice: extraPrice,
+                dobladas: dobladas,
+                bebida: bebida,
+                extras: extras
+            };
+
+            order.push(combo);
+            closeModal();
+            updateCart();
+
+            // Mostrar mensaje de éxito
+            showToast('🎉 ¡Combo agregado exitosamente!', 'success');
+        }
+
+        function closeModal() {
+            document.getElementById('comboModal').style.display = 'none';
+            currentCombo = null;
+        }
+
+        function clearOrder() {
+            if (confirm('🗑️ ¿Estás seguro de que quieres vaciar todo el carrito?')) {
+                order = [];
+                Object.keys(products).forEach(id => {
+                    itemQuantities[id] = 0;
+                });
+                updateUI();
+                closeReviewModal();
+                showToast('🗑️ Carrito vaciado completamente', 'info');
+            }
+        }
+
+        function reviewOrder() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const address = document.getElementById('customerAddress').value.trim();
+            const paymentMethod = document.getElementById('paymentMethod').value;
+
+            if (!name) {
+                showToast('❌ Por favor completa tu nombre antes de continuar', 'error');
+                document.getElementById('customerName').focus();
+                return;
+            }
+
+            if (!phone) {
+                showToast('❌ Por favor completa tu teléfono antes de continuar', 'error');
+                document.getElementById('customerPhone').focus();
+                return;
+            }
+
+            if (phone.length !== 8) {
+                showToast('❌ El número de teléfono debe tener exactamente 8 dígitos', 'error');
+                document.getElementById('customerPhone').focus();
+                return;
+            }
+
+            if (!address) {
+                showToast('❌ Por favor completa tu dirección antes de continuar', 'error');
+                document.getElementById('customerAddress').focus();
+                return;
+            }
+
+            if (!paymentMethod) {
+                showToast('❌ Por favor selecciona un método de pago', 'error');
+                document.getElementById('paymentMethod').focus();
+                return;
+            }
+
+            if (order.length === 0) {
+                showToast('🛒 No has agregado nada al carrito', 'error');
+                return;
+            }
+
+            showOrderReview();
+        }
+
+        function showOrderReview() {
+            const reviewDiv = document.getElementById('orderReview');
+            const totalSpan = document.getElementById('reviewTotal');
+
+            let html = '';
+            let total = 0;
+
+            // Agrupar items individuales por tipo
+            const groupedItems = {};
+            const combos = [];
+
+            order.forEach(item => {
+                total += item.price;
+
+                if (item.type === 'combo') {
+                    combos.push(item);
+                } else {
+                    const productId = item.productId;
+                    if (!groupedItems[productId]) {
+                        groupedItems[productId] = {
+                            name: item.name,
+                            price: item.price,
+                            count: 0
+                        };
+                    }
+                    groupedItems[productId].count++;
+                }
+            });
+
+            // Mostrar items individuales agrupados
+            Object.values(groupedItems).forEach(group => {
+                html += `<div class="order-item-review">`;
+                if (group.count > 1) {
+                    html += `<strong>🍴 ${group.name} x${group.count}</strong> - <span style="color: var(--primary-red); font-weight: bold;">Q${group.price * group.count}</span>`;
+                } else {
+                    html += `<strong>🍴 ${group.name}</strong> - <span style="color: var(--primary-red); font-weight: bold;">Q${group.price}</span>`;
+                }
+                html += '</div>';
+            });
+
+            // Mostrar combos
+            combos.forEach((item, index) => {
+                html += `<div class="order-item-review">`;
+                html += `<strong>🍽️ ${item.name}</strong> - <span style="color: var(--primary-red); font-weight: bold;">Q${item.price}</span>`;
+
+                html += '<div class="order-item-details">';
+
+                // Contar dobladas
+                const dobladaCount = {};
+                item.dobladas.forEach(d => {
+                    dobladaCount[d] = (dobladaCount[d] || 0) + 1;
+                });
+
+                // Mostrar dobladas
+                Object.entries(dobladaCount).forEach(([tipo, count]) => {
+                    const names = {
+                        'res': '🥩 Res',
+                        'pollo': '🐔 Pollo',
+                        'cerdo': '🐷 Cerdo',
+                        'chile': '🌶️ Chile Relleno',
+                        'queso': '🧀 Queso',
+                        'queso-jalapeno': '🌶️🧀 Queso Jalapeño',
+                        'queso-loroco': '🌿🧀 Queso Loroco'
+                    };
+                    html += `&nbsp;&nbsp;• ${names[tipo]}${count > 1 ? ` x${count}` : ''}<br>`;
+                });
+
+                // Bebida
+                const bebidaNames = {
+                    'jamaica': '🟣 Jamaica Natural',
+                    'horchata': '🤍 Horchata Casera',
+                    'limonada': '🟡 Limonada Fresca',
+                    'cocacola': '🔴 Coca Cola',
+                    'sprite': '🟢 Sprite',
+                    'fanta': '🟠 Fanta Naranja'
+                };
+                html += `&nbsp;&nbsp;• ${bebidaNames[item.bebida]}<br>`;
+
+                // Extras
+                if (item.extras && item.extras.length > 0) {
+                    html += `&nbsp;&nbsp;• ✨ ${item.extras.join(', ')}`;
+                }
+
+                html += '</div>';
+                html += '</div>';
+            });
+
+            if (html === '') {
+                html = '<div class="empty-cart"><div class="empty-cart-icon">🛒</div><p>Tu carrito está vacío</p></div>';
+            }
+
+            reviewDiv.innerHTML = html;
+            totalSpan.textContent = `Q${total}`;
+            document.getElementById('reviewModal').style.display = 'block';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        function sendToWhatsApp() {
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerAddress = document.getElementById('customerAddress').value.trim();
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const comments = document.getElementById('orderComments').value.trim();
+
+            if (!customerName || !customerPhone || !paymentMethod) {
+                showToast('❌ Por favor completa todos los campos obligatorios', 'error');
+                return;
+            }
+
+            const now = new Date();
+            const fecha = now.toLocaleDateString('es-GT');
+            const hora = now.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' });
+            const orderNum = orderCounter.toString().padStart(3, '0');
+
+            const paymentNames = {
+                'efectivo': '[EFECTIVO]',
+                'tarjeta': '[TARJETA]',
+                'transferencia': '[TRANSFERENCIA]'
+            };
+
+            let total = 0;
+            const groupedItems = {};
+            const combos = [];
+
+            order.forEach(item => {
+                total += item.price;
+                if (item.type === 'combo') {
+                    combos.push(item);
+                } else {
+                    const productId = item.productId;
+                    if (!groupedItems[productId]) {
+                        groupedItems[productId] = {
+                            name: item.name,
+                            price: item.price,
+                            count: 0
+                        };
+                    }
+                    groupedItems[productId].count++;
+                }
+            });
+
+            let message = `================================\n`;
+            message += `    EL SABOR DOBLA'O\n`;
+            message += `   AUTENTICO SABOR GUATEMALTECO\n`;
+            message += `================================\n`;
+            message += `ORDEN #${orderNum}     ${fecha} ${hora}\n`;
+            message += `================================\n\n`;
+
+            message += `DATOS DEL CLIENTE:\n`;
+            message += `Nombre: ${customerName}\n`;
+            message += `Telefono: ${customerPhone}\n`;
+            message += `Direccion: ${customerAddress || 'No indicada'}\n`;
+            message += `Metodo Pago: ${paymentNames[paymentMethod]}\n`;
+            message += `--------------------------------\n\n`;
+
+            message += `DETALLE DEL PEDIDO:\n`;
+            message += `--------------------------------\n`;
+
+            // Ítems individuales agrupados
+            Object.values(groupedItems).forEach(group => {
+                const itemName = group.count > 1 ? `${group.name} x${group.count}` : group.name;
+                const itemPrice = `Q${group.price * group.count}`;
+                message += `${itemName}\n`;
+                message += `${' '.repeat(32 - itemPrice.length)}${itemPrice}\n`;
+            });
+
+            // Combos
+            combos.forEach((item, index) => {
+                const comboName = `${item.name} #${index + 1}`;
+                const comboPrice = `Q${item.price}`;
+                message += `${comboName}\n`;
+                message += `${' '.repeat(32 - comboPrice.length)}${comboPrice}\n`;
+
+                // Dobladas por línea
+                const dobladaCount = {};
+                item.dobladas.forEach(d => {
+                    dobladaCount[d] = (dobladaCount[d] || 0) + 1;
+                });
+
+                const dobladaNames = {
+                    'res': 'Res',
+                    'pollo': 'Pollo',
+                    'cerdo': 'Cerdo',
+                    'chile': 'Chile Relleno',
+                    'queso': 'Queso',
+                    'queso-jalapeno': 'Queso Jalapeno',
+                    'queso-loroco': 'Queso Loroco'
+                };
+
+                message += `  DOBLADAS:\n`;
+                Object.entries(dobladaCount).forEach(([tipo, count]) => {
+                    message += `    - ${dobladaNames[tipo]}${count > 1 ? ` x${count}` : ''}\n`;
+                });
+
+                const bebidaNames = {
+                    'jamaica': 'Jamaica Natural',
+                    'horchata': 'Horchata Casera',
+                    'limonada': 'Limonada Fresca',
+                    'cocacola': 'Coca Cola',
+                    'sprite': 'Sprite',
+                    'fanta': 'Fanta Naranja'
+                };
+
+                message += `  BEBIDA: ${bebidaNames[item.bebida]}\n`;
+
+                if (item.extras && item.extras.length > 0) {
+                    message += `  EXTRAS: ${item.extras.join(', ')}\n`;
+                }
+                message += `\n`;
+            });
+
+            if (comments) {
+                message += `COMENTARIOS ESPECIALES:\n${comments}\n`;
+                message += `--------------------------------\n`;
+            }
+
+            message += `\n`;
+            message += `TOTAL A PAGAR: Q${total}\n`;
+            message += `================================\n`;
+            message += `GRACIAS POR TU PEDIDO!\n`;
+            message += `Tiempo estimado: 30-45 minutos\n`;
+            message += `Telefono: ${WHATSAPP_NUMBER}\n`;
+            message += `================================\n`;
+
+            orderCounter++;
+            localStorage.setItem('orderCounter', orderCounter.toString());
+
+            const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+
+            // Limpiar formulario después de enviar
+            setTimeout(() => {
+                order = [];
+                Object.keys(products).forEach(id => {
+                    itemQuantities[id] = 0;
+                });
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('customerAddress').value = '';
+                document.getElementById('paymentMethod').value = '';
+                document.getElementById('orderComments').value = '';
+                updateUI();
+                closeReviewModal();
+                showSuccessMessage();
+            }, 1000);
+        }
+
+        function showSuccessMessage() {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(135deg, var(--success), #218838);
+                    color: white;
+                    padding: 25px 35px;
+                    border-radius: 15px;
+                    font-weight: 600;
+                    z-index: 2000;
+                    box-shadow: var(--shadow-lg);
+                    text-align: center;
+                    font-size: 1.1rem;
+                    animation: successPulse 0.5s ease;
+                `;
+            successDiv.innerHTML = `
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
+                    <div>¡Pedido enviado correctamente!</div>
+                    <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.9;">Te contactaremos pronto por WhatsApp</div>
+                `;
+            document.body.appendChild(successDiv);
+
+            setTimeout(() => {
+                successDiv.remove();
+            }, 4000);
+        }
+
+        // Función para mostrar notificaciones toast
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'var(--success)',
+                error: 'var(--danger)',
+                info: 'var(--primary-red)',
+                warning: 'var(--primary-yellow)'
+            };
+
+            toast.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${colors[type]};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    font-weight: 500;
+                    z-index: 2000;
+                    box-shadow: var(--shadow-lg);
+                    max-width: 300px;
+                    font-size: 0.9rem;
+                    animation: toastSlideIn 0.3s ease;
+                `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Agregar event listeners para los clicks en items del menú
+        document.addEventListener('DOMContentLoaded', function () {
+            Object.keys(products).forEach(productId => {
+                const menuItem = document.getElementById(`item-${productId}`);
+                if (menuItem) {
+                    // Solo añadir el listener al área del item que no incluye los controles de cantidad
+                    const header = menuItem.querySelector('.menu-item-header');
+                    if (header) {
+                        header.addEventListener('click', function () {
+                            handleMenuItemClick(productId);
+                        });
+                    }
+                }
+            });
+
+            // Agregar animaciones de entrada a las secciones
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.classList.add('fade-in');
+                }, index * 200);
+            });
+        });
+
+        // Cerrar modales al hacer clic fuera
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                if (event.target.id === 'comboModal') {
+                    closeModal();
+                } else if (event.target.id === 'reviewModal') {
+                    closeReviewModal();
+                }
+            }
+        }
+
+        // Prevenir zoom en iOS
+        document.addEventListener('touchstart', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        });
+
+        // Validar entrada de teléfono - solo números y máximo 8 dígitos
+        document.getElementById('customerPhone').addEventListener('input', function (e) {
+            // Eliminar cualquier caracter que no sea número
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+            // Limitar a 8 dígitos
+            if (e.target.value.length > 8) {
+                e.target.value = e.target.value.slice(0, 8);
+            }
+        });
+
+        // Validación adicional al pegar texto
+        document.getElementById('customerPhone').addEventListener('paste', function (e) {
+            e.preventDefault();
+            let paste = (e.clipboardData || window.clipboardData).getData('text');
+            paste = paste.replace(/[^0-9]/g, '').slice(0, 8);
+            e.target.value = paste;
+        });
+
+        // Añadir estilos de animación adicionales
+        const style = document.createElement('style');
+        style.textContent = `
+                @keyframes successPulse {
+                    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+                    50% { transform: translate(-50%, -50%) scale(1.05); }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                }
+
+                @keyframes toastSlideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+
+                @keyframes toastSlideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+        document.head.appendChild(style);
+
+        // Inicializar UI al cargar la página
+        updateUI();
+    </script>
+</body>
+</html>
