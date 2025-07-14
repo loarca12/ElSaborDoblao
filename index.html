@@ -1713,7 +1713,14 @@
             const now = new Date();
             const fecha = now.toLocaleDateString('es-GT');
             const hora = now.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' });
-            const orderNum = orderCounter.toString().padStart(3, '0');
+
+            const initials = customerName
+                .split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase();
+            const uniqueCode = now.getTime().toString().slice(-4);
+            const orderCode = `${initials}-${uniqueCode}`;
 
             const paymentNames = {
                 'efectivo': '[EFECTIVO]',
@@ -1742,20 +1749,19 @@
                 }
             });
 
-            let message = `================================\n`;
-            message += `    EL SABOR DOBLA'O\n`;
-            message += `   AUTENTICO SABOR GUATEMALTECO\n`;
-            message += `================================\n`;
-            message += `ORDEN #${orderNum}     ${fecha} ${hora}\n`;
-            message += `================================\n\n`;
+            let message = `========================================\n`;
+            message += `        🧾 NUEVO PEDIDO RECIBIDO\n`;
+            message += `          EL SABOR DOBLA'O\n`;
+            message += `     AUTÉNTICO SABOR GUATEMALTECO\n`;
+            message += `========================================\n`;
+            message += `Orden: #${orderCode}\n`;
+            message += `Fecha: ${fecha} - ${hora}\n`;
+            message += `----------------------------------------\n`;
+            message += `Cliente: ${customerName}\n`;
+            message += `Tel: ${customerPhone}\n`;
+            message += `Dirección: ${customerAddress || 'No indicada'}\n`;
+            message += `Pago: ${paymentNames[paymentMethod]}\n`;
 
-            message += `DATOS DEL CLIENTE:\n`;
-            message += `Nombre: ${customerName}\n`;
-            message += `Telefono: ${customerPhone}\n`;
-            message += `Direccion: ${customerAddress || 'No indicada'}\n`;
-            message += `Metodo Pago: ${paymentNames[paymentMethod]}\n`;
-
-            // Agregar info de facturación si es necesaria
             if (facturaOption !== 'no') {
                 if (facturaOption === 'cf') {
                     message += `Factura: CONSUMIDOR FINAL\n`;
@@ -1763,7 +1769,7 @@
                     message += `Factura: NIT ${customerNit}\n`;
                 }
             }
-            // Validar NIT si se requiere factura con NIT
+
             if (facturaOption === 'nit') {
                 if (!customerNit) {
                     showToast('❌ Por favor ingresa tu NIT para la factura', 'error');
@@ -1776,27 +1782,23 @@
                     return;
                 }
             }
-            message += `--------------------------------\n\n`;
 
+            message += `----------------------------------------\n`;
             message += `DETALLE DEL PEDIDO:\n`;
-            message += `--------------------------------\n`;
 
-            // Ítems individuales agrupados
             Object.values(groupedItems).forEach(group => {
                 const itemName = group.count > 1 ? `${group.name} x${group.count}` : group.name;
                 const itemPrice = `Q${group.price * group.count}`;
-                message += `${itemName}\n`;
-                message += `${' '.repeat(32 - itemPrice.length)}${itemPrice}\n`;
+                const line = `${itemName}`.padEnd(28, ' ') + itemPrice;
+                message += `${line}\n`;
             });
 
-            // Combos
             combos.forEach((item, index) => {
                 const comboName = `${item.name} #${index + 1}`;
                 const comboPrice = `Q${item.price}`;
-                message += `${comboName}\n`;
-                message += `${' '.repeat(32 - comboPrice.length)}${comboPrice}\n`;
+                const line = `${comboName}`.padEnd(28, ' ') + comboPrice;
+                message += `${line}\n`;
 
-                // Dobladas por línea
                 const dobladaCount = {};
                 item.dobladas.forEach(d => {
                     dobladaCount[d] = (dobladaCount[d] || 0) + 1;
@@ -1808,11 +1810,11 @@
                     'cerdo': 'Cerdo',
                     'chile': 'Chile Relleno',
                     'queso': 'Queso',
-                    'queso-jalapeno': 'Queso Jalapeno',
+                    'queso-jalapeno': 'Queso Jalapeño',
                     'queso-loroco': 'Queso Loroco'
                 };
 
-                message += `  DOBLADAS:\n`;
+                message += `  DOBLADAS DEL COMBO #${index + 1}:\n`;
                 Object.entries(dobladaCount).forEach(([tipo, count]) => {
                     message += `    - ${dobladaNames[tipo]}${count > 1 ? ` x${count}` : ''}\n`;
                 });
@@ -1831,29 +1833,25 @@
                 if (item.extras && item.extras.length > 0) {
                     message += `  EXTRAS: ${item.extras.join(', ')}\n`;
                 }
+
                 message += `\n`;
             });
 
             if (comments) {
                 message += `COMENTARIOS ESPECIALES:\n${comments}\n`;
-                message += `--------------------------------\n`;
+                message += `----------------------------------------\n`;
             }
 
-            message += `\n`;
             message += `TOTAL A PAGAR: Q${total}\n`;
-            message += `================================\n`;
-            message += `GRACIAS POR TU PEDIDO!\n`;
+            message += `========================================\n`;
+            message += `¡Gracias por tu pedido!\n`;
             message += `Tiempo estimado: 30-45 minutos\n`;
-            message += `Telefono: ${WHATSAPP_NUMBER}\n`;
-            message += `================================\n`;
-
-            orderCounter++;
-            localStorage.setItem('orderCounter', orderCounter.toString());
+            message += `Teléfono: ${WHATSAPP_NUMBER}\n`;
+            message += `========================================\n`;
 
             const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
             window.open(whatsappURL, '_blank');
 
-            // Limpiar formulario después de enviar
             setTimeout(() => {
                 order = [];
                 Object.keys(products).forEach(id => {
@@ -1873,6 +1871,8 @@
                 showSuccessMessage();
             }, 1000);
         }
+
+
 
         function showSuccessMessage() {
             const successDiv = document.createElement('div');
