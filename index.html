@@ -904,8 +904,20 @@
                 <input type="tel" id="customerPhone" required maxlength="8" pattern="[0-9]{8}">
             </div>
             <div class="form-group">
-                <label for="customerAddress">Dirección de Entrega *</label>
-                <textarea id="customerAddress" rows="2" required placeholder="Ingresa tu dirección completa para la entrega..."></textarea>
+                <label for="customerZone">Zona de Entrega *</label>
+                <select id="customerZone" required style="width: 100%; padding: 14px 18px; border: 2px solid var(--gray-300); border-radius: 12px; font-size: 16px; background: white;">
+                    <option value="">Selecciona tu zona</option>
+                    <option value="Zona 1">Zona 1</option>
+                    <option value="Zona 5">Zona 5</option>
+                    <option value="Zona 9">Zona 9</option>
+                    <option value="Zona 10">Zona 10</option>
+                    <option value="Zona 15">Zona 15</option>
+                    <option value="Zona 16">Zona 16</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="customerAddress">Dirección completa dentro de la zona *</label>
+                <textarea id="customerAddress" rows="2" required placeholder="Ingresa la dirección específica dentro de la zona seleccionada..."></textarea>
             </div>
             <div class="form-group">
                 <label for="paymentMethod">Método de Pago *</label>
@@ -1699,14 +1711,29 @@
             const customerName = document.getElementById('customerName').value.trim();
             const customerPhone = document.getElementById('customerPhone').value.trim();
             const customerAddress = document.getElementById('customerAddress').value.trim();
+            const customerZone = document.getElementById('customerZone').value;
             const paymentMethod = document.getElementById('paymentMethod').value;
             const comments = document.getElementById('orderComments').value.trim();
             const facturaOption = document.getElementById('facturaOption').value;
             const customerNit = document.getElementById('customerNit').value.trim();
 
-            if (!customerName || !customerPhone || !paymentMethod) {
+            if (!customerName || !customerPhone || !customerZone || !customerAddress || !paymentMethod) {
                 showToast('❌ Por favor completa todos los campos obligatorios', 'error');
                 return;
+            }
+
+            // Validar NIT si se requiere factura con NIT
+            if (facturaOption === 'nit') {
+                if (!customerNit) {
+                    showToast('❌ Por favor ingresa tu NIT para la factura', 'error');
+                    document.getElementById('customerNit').focus();
+                    return;
+                }
+                if (customerNit.length < 1 || customerNit.length > 9) {
+                    showToast('❌ El NIT debe tener entre 1 y 9 dígitos', 'error');
+                    document.getElementById('customerNit').focus();
+                    return;
+                }
             }
 
             const now = new Date();
@@ -1748,6 +1775,12 @@
                 }
             });
 
+            // Calcular IVA si requiere factura
+            const requiereFactura = facturaOption !== 'no';
+            const subtotal = total;
+            const iva = requiereFactura ? Math.round(subtotal * 0.05 * 100) / 100 : 0;
+            const totalConIva = requiereFactura ? subtotal + iva : subtotal;
+
             let message = `        NUEVO PEDIDO RECIBIDO\n`;
             message += `========================================\n`;
             message += `          EL SABOR DOBLA'O\n`;
@@ -1758,7 +1791,8 @@
             message += `----------------------------------------\n`;
             message += `Cliente: ${customerName}\n`;
             message += `Tel: ${customerPhone}\n`;
-            message += `Dirección: ${customerAddress || 'No indicada'}\n`;
+            message += `Zona: ${customerZone}\n`;
+            message += `Dirección: ${customerAddress}\n`;
             message += `Pago: ${paymentNames[paymentMethod]}\n`;
 
             if (facturaOption !== 'no') {
@@ -1766,19 +1800,6 @@
                     message += `Factura: CONSUMIDOR FINAL\n`;
                 } else if (facturaOption === 'nit' && customerNit) {
                     message += `Factura: NIT ${customerNit}\n`;
-                }
-            }
-
-            if (facturaOption === 'nit') {
-                if (!customerNit) {
-                    showToast('❌ Por favor ingresa tu NIT para la factura', 'error');
-                    document.getElementById('customerNit').focus();
-                    return;
-                }
-                if (customerNit.length < 1 || customerNit.length > 9) {
-                    showToast('❌ El NIT debe tener entre 1 y 9 dígitos', 'error');
-                    document.getElementById('customerNit').focus();
-                    return;
                 }
             }
 
@@ -1841,7 +1862,15 @@
                 message += `----------------------------------------\n`;
             }
 
-            message += `TOTAL A PAGAR: Q${total}\n`;
+            // Mostrar desglose de totales
+            if (requiereFactura) {
+                message += `SUBTOTAL: Q${subtotal.toFixed(2)}\n`;
+                message += `IVA (5%): Q${iva.toFixed(2)}\n`;
+                message += `TOTAL A PAGAR: Q${totalConIva.toFixed(2)}\n`;
+            } else {
+                message += `TOTAL A PAGAR: Q${total}\n`;
+            }
+
             message += `========================================\n`;
             message += `¡Gracias por tu pedido!\n`;
             message += `Tiempo estimado: 30-45 minutos\n`;
@@ -1859,6 +1888,7 @@
                 document.getElementById('customerName').value = '';
                 document.getElementById('customerPhone').value = '';
                 document.getElementById('customerAddress').value = '';
+                document.getElementById('customerZone').value = '';
                 document.getElementById('paymentMethod').value = '';
                 document.getElementById('orderComments').value = '';
                 document.getElementById('facturaOption').value = 'no';
