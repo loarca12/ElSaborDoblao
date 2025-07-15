@@ -1373,30 +1373,58 @@
                 changeQuantity(productId, 1);
             }
         }
-
         function updateCart() {
             const itemsCount = document.getElementById('cartItemsCount');
             const totalSpan = document.getElementById('cartTotal');
             const whatsappBtn = document.getElementById('whatsappBtn');
 
             const totalItems = order.length;
-            const total = order.reduce((sum, item) => sum + item.price, 0);
+            const subtotalProductos = order.reduce((sum, item) => sum + item.price, 0);
+
+            // Calcular costo de envío según zona seleccionada
+            const customerZone = document.getElementById('customerZone')?.value || '';
+            let costoEnvio = 0;
+
+            if (customerZone) {
+                if (customerZone === 'Zona 15') {
+                    costoEnvio = 20;
+                } else if (customerZone === 'Zona 16') {
+                    costoEnvio = 15;
+                } else {
+                    costoEnvio = 25;
+                }
+            }
+
+            const totalFinal = subtotalProductos + costoEnvio;
 
             if (totalItems === 0) {
                 itemsCount.textContent = '🛒 Tu carrito está vacío';
                 whatsappBtn.disabled = true;
                 whatsappBtn.classList.add('pulse');
-            } else if (totalItems === 1) {
-                itemsCount.textContent = '🎉 1 delicioso item agregado';
-                whatsappBtn.disabled = false;
-                whatsappBtn.classList.remove('pulse');
+                totalSpan.textContent = 'Q0';
             } else {
-                itemsCount.textContent = `🎉 ${totalItems} deliciosos items agregados`;
+                if (totalItems === 1) {
+                    itemsCount.textContent = '🎉 1 delicioso item agregado';
+                } else {
+                    itemsCount.textContent = `🎉 ${totalItems} deliciosos items agregados`;
+                }
+
                 whatsappBtn.disabled = false;
                 whatsappBtn.classList.remove('pulse');
-            }
 
-            totalSpan.textContent = `Q${total}`;
+                // Mostrar desglose en el carrito
+                if (customerZone && costoEnvio > 0) {
+                    totalSpan.innerHTML = `
+                <div style="font-size: 0.85rem; color: var(--gray-600);">
+                    Productos: Q${subtotalProductos}<br>
+                    Envío (${customerZone}): Q${costoEnvio}
+                </div>
+                <div style="font-weight: 800;">Total: Q${totalFinal}</div>
+            `;
+                } else {
+                    totalSpan.textContent = `Q${subtotalProductos}`;
+                }
+            }
 
             // Actualizar listas de combos
             updateComboLists();
@@ -1636,6 +1664,22 @@
                 }
             });
 
+            // Calcular costo de envío
+            const customerZone = document.getElementById('customerZone')?.value || '';
+            let costoEnvio = 0;
+
+            if (customerZone) {
+                if (customerZone === 'Zona 15') {
+                    costoEnvio = 20;
+                } else if (customerZone === 'Zona 16') {
+                    costoEnvio = 15;
+                } else {
+                    costoEnvio = 25;
+                }
+            }
+
+            const totalFinal = total + costoEnvio;
+
             // Mostrar items individuales agrupados
             Object.values(groupedItems).forEach(group => {
                 html += `<div class="order-item-review">`;
@@ -1694,12 +1738,32 @@
                 html += '</div>';
             });
 
+            // Agregar línea de envío si hay zona seleccionada
+            if (customerZone && costoEnvio > 0) {
+                html += `<div class="order-item-review" style="border-left: 4px solid #10b981;">`;
+                html += `<strong>🚚 Envío (${customerZone})</strong> - <span style="color: #10b981; font-weight: bold;">Q${costoEnvio}</span>`;
+                html += '</div>';
+            }
+
             if (html === '') {
                 html = '<div class="empty-cart"><div class="empty-cart-icon">🛒</div><p>Tu carrito está vacío</p></div>';
             }
 
             reviewDiv.innerHTML = html;
-            totalSpan.textContent = `Q${total}`;
+
+            // Mostrar total con envío
+            if (customerZone && costoEnvio > 0) {
+                totalSpan.innerHTML = `
+            <div style="font-size: 0.9rem; color: var(--gray-600); margin-bottom: 5px;">
+                Productos: Q${total}<br>
+                Envío: Q${costoEnvio}
+            </div>
+            Q${totalFinal}
+        `;
+            } else {
+                totalSpan.textContent = `Q${total}`;
+            }
+
             document.getElementById('reviewModal').style.display = 'block';
         }
 
@@ -1754,6 +1818,14 @@
                 'transferencia': '[TRANSFERENCIA]'
             };
 
+            // Calcular costo de envío por zona
+            let costoEnvio = 25; // Costo por defecto
+            if (customerZone === 'Zona 15') {
+                costoEnvio = 20;
+            } else if (customerZone === 'Zona 16') {
+                costoEnvio = 15;
+            }
+
             let total = 0;
             const groupedItems = {};
             const combos = [];
@@ -1775,11 +1847,9 @@
                 }
             });
 
-            // Calcular IVA si requiere factura
-            const requiereFactura = facturaOption !== 'no';
-            const subtotal = total;
-            const iva = requiereFactura ? Math.round(subtotal * 0.05 * 100) / 100 : 0;
-            const totalConIva = requiereFactura ? subtotal + iva : subtotal;
+            // Total final (productos + envío)
+            const subtotalProductos = total;
+            const totalFinal = subtotalProductos + costoEnvio;
 
             let message = `        NUEVO PEDIDO RECIBIDO\n`;
             message += `========================================\n`;
@@ -1862,14 +1932,10 @@
                 message += `----------------------------------------\n`;
             }
 
-            // Mostrar desglose de totales
-            if (requiereFactura) {
-                message += `SUBTOTAL: Q${subtotal.toFixed(2)}\n`;
-                message += `IVA (5%): Q${iva.toFixed(2)}\n`;
-                message += `TOTAL A PAGAR: Q${totalConIva.toFixed(2)}\n`;
-            } else {
-                message += `TOTAL A PAGAR: Q${total}\n`;
-            }
+            // Mostrar desglose de totales (sin IVA)
+            message += `SUBTOTAL PRODUCTOS: Q${subtotalProductos}\n`;
+            message += `ENVIO (${customerZone}): Q${costoEnvio}\n`;
+            message += `TOTAL A PAGAR: Q${totalFinal}\n`;
 
             message += `========================================\n`;
             message += `¡Gracias por tu pedido!\n`;
@@ -2044,6 +2110,10 @@
             let paste = (e.clipboardData || window.clipboardData).getData('text');
             paste = paste.replace(/[^0-9]/g, '').slice(0, 9);
             e.target.value = paste;
+        });
+        // Agregar después de las validaciones del teléfono
+        document.getElementById('customerZone').addEventListener('change', function () {
+            updateCart(); // Recalcular cuando cambie la zona
         });
 
         // Añadir estilos de animación adicionales
