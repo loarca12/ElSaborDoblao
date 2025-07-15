@@ -15,10 +15,10 @@
         }
 
         :root {
-            --primary-red: #ff8c00; 
-            --primary-yellow: #FEB800; 
-            --primary-cream: #F9CE78; 
-            --dark-red: #ff6b35; 
+            --primary-red: #ff8c00; /* Naranja original */
+            --primary-yellow: #FEB800; /* Tu amarillo (se mantiene) */
+            --primary-cream: #F9CE78; /* Tu crema (se mantiene) */
+            --dark-red: #ff6b35; /* Naranja más intenso */
             --dark-yellow: #e6a500;
             --white: #ffffff;
             --black: #000000;
@@ -75,17 +75,15 @@
             font-size: 1.5rem;
             margin-bottom: 5px;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, var(--primary-yellow), var(--primary-cream));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            color: white; /* Texto blanco sólido */
         }
 
         .header p {
             font-size: 0.9rem;
             opacity: 0.95;
             font-weight: 400;
+            color: white; /* También blanco */
         }
 
         /* MÓVILES PEQUEÑOS - Header compacto */
@@ -368,22 +366,23 @@
         }
 
         .clear-item-btn {
-            background: linear-gradient(135deg, var(--danger), #c82333);
-            color: white;
+            background: transparent;
+            color: #6b7280;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 1rem;
             cursor: pointer;
             margin-left: 12px;
-            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+            width: auto;
+            min-width: auto;
         }
 
             .clear-item-btn:hover {
-                transform: translateY(-1px);
-                box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+                background: #f3f4f6;
+                color: #374151;
+                transform: scale(1.1);
             }
 
         /* Botones de combo mejorados */
@@ -1234,6 +1233,7 @@
     </div>
 
     <script>
+        // Tu número de WhatsApp (código de país + número)
         const WHATSAPP_NUMBER = '50234827948';
 
         // Información de los productos
@@ -1402,9 +1402,9 @@
                 const comboDiv = document.createElement('div');
                 comboDiv.className = 'combo-added-item';
                 comboDiv.innerHTML = `
-                        <span>✅ Combo #${index + 1} - Q${combo.price}</span>
-                        <button class="remove-combo-btn" onclick="removeCombo(${combo.id})">✖️ Quitar</button>
-                    `;
+                            <span>✅ Combo #${index + 1} - Q${combo.price}</span>
+                            <button class="remove-combo-btn" onclick="removeCombo(${combo.id})">✖️ Quitar</button>
+                        `;
                 doblaoList.appendChild(comboDiv);
             });
 
@@ -1415,9 +1415,9 @@
                 const comboDiv = document.createElement('div');
                 comboDiv.className = 'combo-added-item';
                 comboDiv.innerHTML = `
-                        <span>✅ Combo #${index + 1} - Q${combo.price}</span>
-                        <button class="remove-combo-btn" onclick="removeCombo(${combo.id})">✖️ Quitar</button>
-                    `;
+                            <span>✅ Combo #${index + 1} - Q${combo.price}</span>
+                            <button class="remove-combo-btn" onclick="removeCombo(${combo.id})">✖️ Quitar</button>
+                        `;
                 tripleList.appendChild(comboDiv);
             });
         }
@@ -1441,47 +1441,47 @@
             // Dobladas
             for (let i = 0; i < numDobladas; i++) {
                 html += `
-                        <div class="modal-group">
-                            <label>🥙 Doblada ${i + 1}:</label>
-                            <select id="doblada${i}">
-                                <option value="res">🥩 Doblada de Res</option>
-                                <option value="pollo">🐔 Doblada de Pollo</option>
-                                <option value="cerdo">🐷 Doblada de Cerdo</option>
-                                <option value="chile">🌶️ Doblada de Chile Relleno</option>
-                                <option value="queso">🧀 Doblada de Queso</option>
-                                <option value="queso-jalapeno">🌶️🧀 Doblada de Queso Jalapeño</option>
-                                <option value="queso-loroco">🌿🧀 Doblada de Queso Loroco</option>
-                            </select>
-                        </div>
-                    `;
+                            <div class="modal-group">
+                                <label>🥙 Doblada ${i + 1}:</label>
+                                <select id="doblada${i}">
+                                    <option value="res">🥩 Doblada de Res</option>
+                                    <option value="pollo">🐔 Doblada de Pollo</option>
+                                    <option value="cerdo">🐷 Doblada de Cerdo</option>
+                                    <option value="chile">🌶️ Doblada de Chile Relleno</option>
+                                    <option value="queso">🧀 Doblada de Queso</option>
+                                    <option value="queso-jalapeno">🌶️🧀 Doblada de Queso Jalapeño</option>
+                                    <option value="queso-loroco">🌿🧀 Doblada de Queso Loroco</option>
+                                </select>
+                            </div>
+                        `;
             }
 
             // Bebida
             html += `
-                    <div class="modal-group">
-                        <label>🥤 Bebida incluida:</label>
-                        <select id="bebida">
-                            <option value="jamaica">🟣 Jamaica Natural</option>
-                            <option value="horchata">🤍 Horchata Casera</option>
-                            <option value="limonada">🟡 Limonada Fresca</option>
-                            <option value="cocacola">🔴 Coca Cola</option>
-                            <option value="sprite">🟢 Sprite</option>
-                            <option value="fanta">🟠 Fanta Naranja</option>
-                        </select>
-                    </div>
+                        <div class="modal-group">
+                            <label>🥤 Bebida incluida:</label>
+                            <select id="bebida">
+                                <option value="jamaica">🟣 Jamaica Natural</option>
+                                <option value="horchata">🤍 Horchata Casera</option>
+                                <option value="limonada">🟡 Limonada Fresca</option>
+                                <option value="cocacola">🔴 Coca Cola</option>
+                                <option value="sprite">🟢 Sprite</option>
+                                <option value="fanta">🟠 Fanta Naranja</option>
+                            </select>
+                        </div>
 
-                    <div class="extras-group">
-                        <label style="margin-bottom: 15px; font-weight: 600; color: var(--gray-800);">✨ Extras opcionales:</label>
-                        <div class="extra-option">
-                            <input type="checkbox" id="extraQueso" value="6">
-                            <label for="extraQueso" style="margin: 0; cursor: pointer;">🧀 Extra Queso - <strong>Q6</strong></label>
+                        <div class="extras-group">
+                            <label style="margin-bottom: 15px; font-weight: 600; color: var(--gray-800);">✨ Extras opcionales:</label>
+                            <div class="extra-option">
+                                <input type="checkbox" id="extraQueso" value="6">
+                                <label for="extraQueso" style="margin: 0; cursor: pointer;">🧀 Extra Queso - <strong>Q6</strong></label>
+                            </div>
+                            <div class="extra-option">
+                                <input type="checkbox" id="extraCarne" value="6">
+                                <label for="extraCarne" style="margin: 0; cursor: pointer;">🥩 Extra Carne - <strong>Q6</strong></label>
+                            </div>
                         </div>
-                        <div class="extra-option">
-                            <input type="checkbox" id="extraCarne" value="6">
-                            <label for="extraCarne" style="margin: 0; cursor: pointer;">🥩 Extra Carne - <strong>Q6</strong></label>
-                        </div>
-                    </div>
-                `;
+                    `;
 
             document.getElementById('comboConfig').innerHTML = html;
             document.getElementById('comboModal').style.display = 'block';
@@ -1748,8 +1748,8 @@
                 }
             });
 
-            let message = `========================================\n`;
-            message += `          NUEVO PEDIDO RECIBIDO\n`;
+            let message = `        NUEVO PEDIDO RECIBIDO\n`;
+            message += `========================================\n`;
             message += `          EL SABOR DOBLA'O\n`;
             message += `     AUTÉNTICO SABOR GUATEMALTECO\n`;
             message += `========================================\n`;
@@ -1876,26 +1876,26 @@
         function showSuccessMessage() {
             const successDiv = document.createElement('div');
             successDiv.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: linear-gradient(135deg, var(--success), #218838);
-                    color: white;
-                    padding: 25px 35px;
-                    border-radius: 15px;
-                    font-weight: 600;
-                    z-index: 2000;
-                    box-shadow: var(--shadow-lg);
-                    text-align: center;
-                    font-size: 1.1rem;
-                    animation: successPulse 0.5s ease;
-                `;
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, var(--success), #218838);
+                        color: white;
+                        padding: 25px 35px;
+                        border-radius: 15px;
+                        font-weight: 600;
+                        z-index: 2000;
+                        box-shadow: var(--shadow-lg);
+                        text-align: center;
+                        font-size: 1.1rem;
+                        animation: successPulse 0.5s ease;
+                    `;
             successDiv.innerHTML = `
-                    <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
-                    <div>¡Pedido enviado correctamente!</div>
-                    <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.9;">Te contactaremos pronto por WhatsApp</div>
-                `;
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
+                        <div>¡Pedido enviado correctamente!</div>
+                        <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.9;">Te contactaremos pronto por WhatsApp</div>
+                    `;
             document.body.appendChild(successDiv);
 
             setTimeout(() => {
@@ -1914,20 +1914,20 @@
             };
 
             toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: ${colors[type]};
-                    color: white;
-                    padding: 15px 20px;
-                    border-radius: 10px;
-                    font-weight: 500;
-                    z-index: 2000;
-                    box-shadow: var(--shadow-lg);
-                    max-width: 300px;
-                    font-size: 0.9rem;
-                    animation: toastSlideIn 0.3s ease;
-                `;
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: ${colors[type]};
+                        color: white;
+                        padding: 15px 20px;
+                        border-radius: 10px;
+                        font-weight: 500;
+                        z-index: 2000;
+                        box-shadow: var(--shadow-lg);
+                        max-width: 300px;
+                        font-size: 0.9rem;
+                        animation: toastSlideIn 0.3s ease;
+                    `;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -2019,22 +2019,22 @@
         // Añadir estilos de animación adicionales
         const style = document.createElement('style');
         style.textContent = `
-                @keyframes successPulse {
-                    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-                    50% { transform: translate(-50%, -50%) scale(1.05); }
-                    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-                }
+                    @keyframes successPulse {
+                        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+                        50% { transform: translate(-50%, -50%) scale(1.05); }
+                        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                    }
 
-                @keyframes toastSlideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
+                    @keyframes toastSlideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
 
-                @keyframes toastSlideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
+                    @keyframes toastSlideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
         document.head.appendChild(style);
 
         // Inicializar UI al cargar la página
