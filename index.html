@@ -1943,8 +1943,17 @@
             message += `Teléfono: ${WHATSAPP_NUMBER}\n`;
             message += `========================================\n`;
 
-            const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappURL, '_blank');
+            const whatsappURL = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`;
+
+            // Copiar al portapapeles como respaldo + abrir WhatsApp
+            navigator.clipboard.writeText(message).then(() => {
+                alert('✅ Pedido copiado al portapapeles como respaldo.\n⚠️ En WhatsApp: NO modifiques el mensaje, solo presiona ENVIAR.');
+                window.open(whatsappURL, '_blank');
+            }).catch(() => {
+                // Si falla la copia, mostrar advertencia y abrir WhatsApp normal
+                alert('⚠️ IMPORTANTE: En WhatsApp NO modifiques el mensaje, solo presiona el botón ENVIAR verde.');
+                window.open(whatsappURL, '_blank');
+            });
 
             setTimeout(() => {
                 order = [];
