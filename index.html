@@ -929,6 +929,32 @@
                 </select>
             </div>
             <div class="form-group">
+                <label for="deliveryTime">Tiempo de Entrega *</label>
+                <select id="deliveryTime" required style="width: 100%; padding: 14px 18px; border: 2px solid var(--gray-300); border-radius: 12px; font-size: 16px; background: white;">
+                    <option value="">Selecciona tiempo de entrega</option>
+                    <option value="hoy">🚚 Entrega HOY (30-45 min)</option>
+                    <option value="mañana">📅 Programar para MAÑANA</option>
+                </select>
+            </div>
+
+            <!-- Campo que aparece solo si elige "mañana" -->
+            <div class="form-group" id="horarioMañana" style="display: none;">
+                <label for="deliveryHour">Hora preferida para mañana *</label>
+                <select id="deliveryHour" style="width: 100%; padding: 14px 18px; border: 2px solid var(--gray-300); border-radius: 12px; font-size: 16px; background: white;">
+                    <option value="">Selecciona hora</option>
+                    <option value="10:00-11:00">🕙 10:00 - 11:00 AM</option>
+                    <option value="11:00-12:00">🕚 11:00 - 12:00 PM</option>
+                    <option value="12:00-13:00">🕛 12:00 - 1:00 PM</option>
+                    <option value="13:00-14:00">🕐 1:00 - 2:00 PM</option>
+                    <option value="14:00-15:00">🕑 2:00 - 3:00 PM</option>
+                    <option value="15:00-16:00">🕒 3:00 - 4:00 PM</option>
+                    <option value="16:00-17:00">🕓 4:00 - 5:00 PM</option>
+                    <option value="17:00-18:00">🕔 5:00 - 6:00 PM</option>
+                    <option value="18:00-19:00">🕕 6:00 - 7:00 PM</option>
+                    <option value="19:00-20:00">🕖 7:00 - 8:00 PM</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="orderComments">Comentarios Especiales</label>
                 <textarea id="orderComments" rows="2" placeholder="Ej: Sin cebolla, extra sal, bien cocido, etc."></textarea>
             </div>
@@ -1780,9 +1806,18 @@
             const comments = document.getElementById('orderComments').value.trim();
             const facturaOption = document.getElementById('facturaOption').value;
             const customerNit = document.getElementById('customerNit').value.trim();
+            const deliveryTime = document.getElementById('deliveryTime').value;
+            const deliveryHour = document.getElementById('deliveryHour').value;
 
-            if (!customerName || !customerPhone || !customerZone || !customerAddress || !paymentMethod) {
+            if (!customerName || !customerPhone || !customerZone || !customerAddress || !paymentMethod || !deliveryTime) {
                 showToast('❌ Por favor completa todos los campos obligatorios', 'error');
+                return;
+            }
+
+            // Validar horario si es para mañana
+            if (deliveryTime === 'mañana' && !deliveryHour) {
+                showToast('❌ Por favor selecciona la hora para mañana', 'error');
+                document.getElementById('deliveryHour').focus();
                 return;
             }
 
@@ -1865,6 +1900,17 @@
             message += `Dirección: ${customerAddress}\n`;
             message += `Pago: ${paymentNames[paymentMethod]}\n`;
 
+            // Agregar información de entrega
+            if (deliveryTime === 'hoy') {
+                message += `Entrega: HOY (30-45 min)\n`;
+            } else if (deliveryTime === 'mañana') {
+                const mañana = new Date();
+                mañana.setDate(mañana.getDate() + 1);
+                const fechaMañana = mañana.toLocaleDateString('es-GT');
+                message += `Entrega: MAÑANA ${fechaMañana}\n`;
+                message += `Horario: ${deliveryHour}\n`;
+            }
+
             if (facturaOption !== 'no') {
                 if (facturaOption === 'cf') {
                     message += `Factura: CONSUMIDOR FINAL\n`;
@@ -1940,7 +1986,11 @@
 
             message += `========================================\n`;
             message += `¡Gracias por tu pedido!\n`;
-            message += `Tiempo estimado: 30-45 minutos\n`;
+            if (deliveryTime === 'hoy') {
+                message += `Tiempo estimado: 30-45 minutos\n`;
+            } else {
+                message += `Entrega programada para mañana\n`;
+            }
             message += `Teléfono: ${WHATSAPP_NUMBER}\n`;
             message += `========================================\n`;
 
@@ -1965,7 +2015,10 @@
                 document.getElementById('orderComments').value = '';
                 document.getElementById('facturaOption').value = 'no';
                 document.getElementById('customerNit').value = '';
+                document.getElementById('deliveryTime').value = '';
+                document.getElementById('deliveryHour').value = '';
                 document.getElementById('facturaSection').style.display = 'none';
+                document.getElementById('horarioMañana').style.display = 'none';
                 document.getElementById('facturaArrow').textContent = '▼';
                 updateUI();
                 closeReviewModal();
@@ -2122,6 +2175,19 @@
             updateCart(); // Recalcular cuando cambie la zona
         });
 
+        document.getElementById('deliveryTime').addEventListener('change', function () {
+            const horarioDiv = document.getElementById('horarioMañana');
+            const deliveryHour = document.getElementById('deliveryHour');
+
+            if (this.value === 'mañana') {
+                horarioDiv.style.display = 'block';
+                deliveryHour.required = true;
+            } else {
+                horarioDiv.style.display = 'none';
+                deliveryHour.required = false;
+                deliveryHour.value = '';
+            }
+        });
         // Añadir estilos de animación adicionales
         const style = document.createElement('style');
         style.textContent = `
