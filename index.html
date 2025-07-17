@@ -1851,10 +1851,10 @@
             const subtotalProductos = total;
             const totalFinal = subtotalProductos + costoEnvio;
 
-            let message = `        NUEVO PEDIDO RECIBIDO\n`;
+            let message = `      NUEVO PEDIDO RECIBIDO\n`;
             message += `========================================\n`;
-            message += `          EL SABOR DOBLA'O\n`;
-            message += `     AUTÉNTICO SABOR GUATEMALTECO\n`;
+            message += `        EL SABOR DOBLA'O\n`;
+            message += `   AUTÉNTICO SABOR GUATEMALTECO\n`;
             message += `========================================\n`;
             message += `Orden: #${orderCode}\n`;
             message += `Fecha: ${fecha} - ${hora}\n`;
@@ -1876,23 +1876,23 @@
             message += `----------------------------------------\n`;
             message += `DETALLE DEL PEDIDO:\n`;
 
-            Object.values(groupedItems).forEach(group => {
-                const itemName = group.count > 1 ? `${group.name} x${group.count}` : group.name;
-                const itemPrice = `Q${group.price * group.count}`;
-                const line = `${itemName}`.padEnd(28, ' ') + itemPrice;
-                message += `${line}\n`;
+            // Ítems individuales - UNO POR UNO (sin agrupar)
+            Object.entries(groupedItems).forEach(([productId, group]) => {
+                // Listar cada item individual
+                for (let i = 0; i < group.count; i++) {
+                    const itemName = group.name;
+                    const itemPrice = `Q${group.price}`;
+                    const line = `${itemName}`.padEnd(28, ' ') + itemPrice;
+                    message += `${line}\n`;
+                }
             });
 
+            // Combos con dobladas individuales
             combos.forEach((item, index) => {
                 const comboName = `${item.name} #${index + 1}`;
                 const comboPrice = `Q${item.price}`;
                 const line = `${comboName}`.padEnd(28, ' ') + comboPrice;
                 message += `${line}\n`;
-
-                const dobladaCount = {};
-                item.dobladas.forEach(d => {
-                    dobladaCount[d] = (dobladaCount[d] || 0) + 1;
-                });
 
                 const dobladaNames = {
                     'res': 'Res',
@@ -1905,8 +1905,9 @@
                 };
 
                 message += `  DOBLADAS DEL COMBO #${index + 1}:\n`;
-                Object.entries(dobladaCount).forEach(([tipo, count]) => {
-                    message += `    - ${dobladaNames[tipo]}${count > 1 ? ` x${count}` : ''}\n`;
+                // Listar cada doblada individual (sin agrupar)
+                item.dobladas.forEach(tipo => {
+                    message += `    - ${dobladaNames[tipo]}\n`;
                 });
 
                 const bebidaNames = {
@@ -1943,17 +1944,13 @@
             message += `Teléfono: ${WHATSAPP_NUMBER}\n`;
             message += `========================================\n`;
 
-            const whatsappURL = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`;
+            const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-            // Copiar al portapapeles como respaldo + abrir WhatsApp
-            navigator.clipboard.writeText(message).then(() => {
-                alert('✅ Pedido copiado al portapapeles como respaldo.\n⚠️ En WhatsApp: NO modifiques el mensaje, solo presiona ENVIAR.');
-                window.open(whatsappURL, '_blank');
-            }).catch(() => {
-                // Si falla la copia, mostrar advertencia y abrir WhatsApp normal
-                alert('⚠️ IMPORTANTE: En WhatsApp NO modifiques el mensaje, solo presiona el botón ENVIAR verde.');
-                window.open(whatsappURL, '_blank');
-            });
+            // Mostrar advertencia antes de abrir
+            alert('⚠️ IMPORTANTE: Se abrirá WhatsApp.\n\n✅ NO modifiques el mensaje\n✅ Solo presiona el botón ENVIAR verde');
+
+            // El método MÁS compatible - funciona en cualquier dispositivo
+            window.open(whatsappURL, '_blank');
 
             setTimeout(() => {
                 order = [];
