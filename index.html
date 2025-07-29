@@ -930,17 +930,34 @@
             </div>
             <div class="form-group">
                 <label for="deliveryTime">Tiempo de Entrega *</label>
-                <select id="deliveryTime" required style="width: 100%; padding: 14px 18px; border: 2px solid var(--gray-300); border-radius: 12px; font-size: 16px; background: white;">
+                <select id="deliveryTime" required>
                     <option value="">Selecciona tiempo de entrega</option>
                     <option value="hoy">🚚 Entrega HOY (30-45 min)</option>
+                    <option value="hoy-hora">📅 Entrega HOY - Elegir Hora</option>
                     <option value="mañana">📅 Programar para MAÑANA</option>
                 </select>
             </div>
 
-            <!-- Campo que aparece solo si elige "mañana" -->
+            <!-- Campo que aparece si elige "hoy-hora" -->
+            <div class="form-group" id="horarioHoy" style="display: none;">
+                <label for="deliveryHourToday">Hora preferida para hoy *</label>
+                <select id="deliveryHourToday">
+                    <option value="">Selecciona hora</option>
+                    <option value="12:00-13:00">🕛 12:00 - 1:00 PM</option>
+                    <option value="13:00-14:00">🕐 1:00 - 2:00 PM</option>
+                    <option value="14:00-15:00">🕑 2:00 - 3:00 PM</option>
+                    <option value="15:00-16:00">🕒 3:00 - 4:00 PM</option>
+                    <option value="16:00-17:00">🕓 4:00 - 5:00 PM</option>
+                    <option value="17:00-18:00">🕔 5:00 - 6:00 PM</option>
+                    <option value="18:00-19:00">🕕 6:00 - 7:00 PM</option>
+                    <option value="19:00-20:00">🕖 7:00 - 8:00 PM</option>
+                </select>
+            </div>
+
+            <!-- Campo que aparece si elige "mañana" -->
             <div class="form-group" id="horarioMañana" style="display: none;">
                 <label for="deliveryHour">Hora preferida para mañana *</label>
-                <select id="deliveryHour" style="width: 100%; padding: 14px 18px; border: 2px solid var(--gray-300); border-radius: 12px; font-size: 16px; background: white;">
+                <select id="deliveryHour">
                     <option value="">Selecciona hora</option>
                     <option value="10:00-11:00">🕙 10:00 - 11:00 AM</option>
                     <option value="11:00-12:00">🕚 11:00 - 12:00 PM</option>
@@ -1808,6 +1825,7 @@
             const customerNit = document.getElementById('customerNit').value.trim();
             const deliveryTime = document.getElementById('deliveryTime').value;
             const deliveryHour = document.getElementById('deliveryHour').value;
+            const deliveryHourToday = document.getElementById('deliveryHourToday')?.value || ''; // 👈 NUEVO
 
             if (!customerName || !customerPhone || !customerZone || !customerAddress || !paymentMethod || !deliveryTime) {
                 showToast('❌ Por favor completa todos los campos obligatorios', 'error');
@@ -1818,6 +1836,13 @@
             if (deliveryTime === 'mañana' && !deliveryHour) {
                 showToast('❌ Por favor selecciona la hora para mañana', 'error');
                 document.getElementById('deliveryHour').focus();
+                return;
+            }
+
+            // ✅ Validar hora si es entrega HOY con hora específica
+            if (deliveryTime === 'hoy-hora' && !deliveryHourToday) {
+                showToast('❌ Por favor selecciona la hora para hoy', 'error');
+                document.getElementById('deliveryHourToday').focus();
                 return;
             }
 
@@ -1853,13 +1878,9 @@
                 'transferencia': '[TRANSFERENCIA]'
             };
 
-            // Calcular costo de envío por zona
-            let costoEnvio = 25; // Costo por defecto
-            if (customerZone === 'Zona 15') {
-                costoEnvio = 20;
-            } else if (customerZone === 'Zona 16') {
-                costoEnvio = 15;
-            }
+            let costoEnvio = 25;
+            if (customerZone === 'Zona 15') costoEnvio = 20;
+            else if (customerZone === 'Zona 16') costoEnvio = 15;
 
             let total = 0;
             const groupedItems = {};
@@ -1882,7 +1903,6 @@
                 }
             });
 
-            // Total final (productos + envío)
             const subtotalProductos = total;
             const totalFinal = subtotalProductos + costoEnvio;
 
@@ -1900,9 +1920,11 @@
             message += `Dirección: ${customerAddress}\n`;
             message += `Pago: ${paymentNames[paymentMethod]}\n`;
 
-            // Agregar información de entrega
+            // ✅ Información de entrega con la nueva opción "hoy-hora"
             if (deliveryTime === 'hoy') {
                 message += `Entrega: HOY (30-45 min)\n`;
+            } else if (deliveryTime === 'hoy-hora') {
+                message += `Entrega: HOY a las ${deliveryHourToday}\n`;
             } else if (deliveryTime === 'mañana') {
                 const mañana = new Date();
                 mañana.setDate(mañana.getDate() + 1);
@@ -1922,9 +1944,7 @@
             message += `----------------------------------------\n`;
             message += `DETALLE DEL PEDIDO:\n`;
 
-            // Ítems individuales - UNO POR UNO (sin agrupar)
             Object.entries(groupedItems).forEach(([productId, group]) => {
-                // Listar cada item individual
                 for (let i = 0; i < group.count; i++) {
                     const itemName = group.name;
                     const itemPrice = `Q${group.price}`;
@@ -1933,7 +1953,6 @@
                 }
             });
 
-            // Combos con dobladas individuales
             combos.forEach((item, index) => {
                 const comboName = `${item.name} #${index + 1}`;
                 const comboPrice = `Q${item.price}`;
@@ -1951,7 +1970,6 @@
                 };
 
                 message += `  DOBLADAS DEL COMBO #${index + 1}:\n`;
-                // Listar cada doblada individual (sin agrupar)
                 item.dobladas.forEach(tipo => {
                     message += `    - ${dobladaNames[tipo]}\n`;
                 });
@@ -1979,7 +1997,6 @@
                 message += `----------------------------------------\n`;
             }
 
-            // Mostrar desglose de totales (sin IVA)
             message += `SUBTOTAL PRODUCTOS: Q${subtotalProductos}\n`;
             message += `ENVIO (${customerZone}): Q${costoEnvio}\n`;
             message += `TOTAL A PAGAR: Q${totalFinal}\n`;
@@ -1988,6 +2005,8 @@
             message += `¡Gracias por tu pedido!\n`;
             if (deliveryTime === 'hoy') {
                 message += `Tiempo estimado: 30-45 minutos\n`;
+            } else if (deliveryTime === 'hoy-hora') {
+                message += `Entrega programada para hoy\n`;
             } else {
                 message += `Entrega programada para mañana\n`;
             }
@@ -1996,10 +2015,8 @@
 
             const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-            // Mostrar advertencia antes de abrir
             alert('⚠️ IMPORTANTE: Se abrirá WhatsApp.\n\n✅ NO modifiques el mensaje\n✅ Solo presiona el botón ENVIAR verde');
 
-            // El método MÁS compatible - funciona en cualquier dispositivo
             window.open(whatsappURL, '_blank');
 
             setTimeout(() => {
@@ -2017,14 +2034,17 @@
                 document.getElementById('customerNit').value = '';
                 document.getElementById('deliveryTime').value = '';
                 document.getElementById('deliveryHour').value = '';
+                document.getElementById('deliveryHourToday').value = ''; // 👈 limpiar
                 document.getElementById('facturaSection').style.display = 'none';
                 document.getElementById('horarioMañana').style.display = 'none';
+                document.getElementById('horarioHoy').style.display = 'none'; // 👈 ocultar
                 document.getElementById('facturaArrow').textContent = '▼';
                 updateUI();
                 closeReviewModal();
                 showSuccessMessage();
             }, 1000);
         }
+
 
 
 
@@ -2176,16 +2196,19 @@
         });
 
         document.getElementById('deliveryTime').addEventListener('change', function () {
-            const horarioDiv = document.getElementById('horarioMañana');
-            const deliveryHour = document.getElementById('deliveryHour');
+            const value = this.value;
+            const horarioMañana = document.getElementById('horarioMañana');
+            const horarioHoy = document.getElementById('horarioHoy');
 
-            if (this.value === 'mañana') {
-                horarioDiv.style.display = 'block';
-                deliveryHour.required = true;
+            if (value === 'mañana') {
+                horarioMañana.style.display = 'block';
+                horarioHoy.style.display = 'none';
+            } else if (value === 'hoy-hora') {
+                horarioHoy.style.display = 'block';
+                horarioMañana.style.display = 'none';
             } else {
-                horarioDiv.style.display = 'none';
-                deliveryHour.required = false;
-                deliveryHour.value = '';
+                horarioHoy.style.display = 'none';
+                horarioMañana.style.display = 'none';
             }
         });
         // Añadir estilos de animación adicionales
